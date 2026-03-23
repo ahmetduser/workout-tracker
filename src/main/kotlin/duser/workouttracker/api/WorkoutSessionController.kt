@@ -20,7 +20,7 @@ import java.util.UUID
 
 @Validated
 @RestController
-@RequestMapping("/api/workout-sessions")
+@RequestMapping(ApiPaths.WorkoutSessions.ROOT)
 class WorkoutSessionController(
     private val workoutSessionService: WorkoutSessionService,
 ) {
@@ -29,7 +29,7 @@ class WorkoutSessionController(
     fun createWorkoutSession(@Valid @RequestBody request: CreateWorkoutSessionRequest): ResponseEntity<WorkoutSessionResponse> {
         val response = workoutSessionService.createWorkoutSession(request)
         val location = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
+            .path(ApiPaths.ID_SEGMENT)
             .buildAndExpand(response.id)
             .toUri()
 
@@ -41,12 +41,12 @@ class WorkoutSessionController(
         return workoutSessionService.getWorkoutHistory(requireNotNull(userId))
     }
 
-    @GetMapping("/{sessionId}")
+    @GetMapping(ApiPaths.WorkoutSessions.BY_ID)
     fun getWorkoutSession(@PathVariable sessionId: UUID): WorkoutSessionResponse {
         return workoutSessionService.getWorkoutSession(sessionId)
     }
 
-    @PostMapping("/{sessionId}/set-entries")
+    @PostMapping(ApiPaths.WorkoutSessions.SET_ENTRIES)
     fun logSetEntry(
         @PathVariable sessionId: UUID,
         @Valid @RequestBody request: LogSetEntryRequest,

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 
 @RestController
-@RequestMapping("/api/exercises")
+@RequestMapping(ApiPaths.Exercises.ROOT)
 class ExerciseController(
     private val exerciseService: ExerciseService,
 ) {
@@ -22,7 +22,7 @@ class ExerciseController(
     fun createExercise(@Valid @RequestBody request: CreateExerciseRequest): ResponseEntity<ExerciseResponse> {
         val response = exerciseService.createExercise(request)
         val location = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
+            .path(ApiPaths.ID_SEGMENT)
             .buildAndExpand(response.id)
             .toUri()
 

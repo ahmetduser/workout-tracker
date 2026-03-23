@@ -16,7 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.util.UUID
 
 @RestController
-@RequestMapping("/api/workout-plans")
+@RequestMapping(ApiPaths.WorkoutPlans.ROOT)
 class WorkoutPlanController(
     private val workoutPlanService: WorkoutPlanService,
 ) {
@@ -25,19 +25,19 @@ class WorkoutPlanController(
     fun createWorkoutPlan(@Valid @RequestBody request: CreateWorkoutPlanRequest): ResponseEntity<WorkoutPlanResponse> {
         val response = workoutPlanService.createWorkoutPlan(request)
         val location = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
+            .path(ApiPaths.ID_SEGMENT)
             .buildAndExpand(response.id)
             .toUri()
 
         return ResponseEntity.created(location).body(response)
     }
 
-    @GetMapping("/{planId}")
+    @GetMapping(ApiPaths.WorkoutPlans.BY_ID)
     fun getWorkoutPlan(@PathVariable planId: UUID): WorkoutPlanResponse {
         return workoutPlanService.getWorkoutPlan(planId)
     }
 
-    @PostMapping("/{planId}/exercises")
+    @PostMapping(ApiPaths.WorkoutPlans.EXERCISES)
     fun addExerciseToPlan(
         @PathVariable planId: UUID,
         @Valid @RequestBody request: AddExerciseToPlanRequest,
