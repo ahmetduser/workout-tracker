@@ -1,0 +1,280 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-users
+      author: codex
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_users
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: display_name
+                  type: varchar(120)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: users
+            columnNames: email
+            constraintName: uk_users_email
+
+  - changeSet:
+      id: 002-create-exercise
+      author: codex
+      changes:
+        - createTable:
+            tableName: exercise
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_exercise
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(120)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(2000)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: exercise
+            columnNames: name
+            constraintName: uk_exercise_name
+
+  - changeSet:
+      id: 003-create-workout-plan
+      author: codex
+      changes:
+        - createTable:
+            tableName: workout_plan
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_workout_plan
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(120)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(2000)
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: workout_plan
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_workout_plan_user
+        - createIndex:
+            tableName: workout_plan
+            indexName: idx_workout_plan_user_id
+            columns:
+              - column:
+                  name: user_id
+
+  - changeSet:
+      id: 004-create-workout-session
+      author: codex
+      changes:
+        - createTable:
+            tableName: workout_session
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_workout_session
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: workout_plan_id
+                  type: uuid
+              - column:
+                  name: started_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ended_at
+                  type: timestamp with time zone
+              - column:
+                  name: notes
+                  type: varchar(2000)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: workout_session
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_workout_session_user
+        - addForeignKeyConstraint:
+            baseTableName: workout_session
+            baseColumnNames: workout_plan_id
+            referencedTableName: workout_plan
+            referencedColumnNames: id
+            constraintName: fk_workout_session_plan
+        - createIndex:
+            tableName: workout_session
+            indexName: idx_workout_session_user_id
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: workout_session
+            indexName: idx_workout_session_plan_id
+            columns:
+              - column:
+                  name: workout_plan_id
+
+  - changeSet:
+      id: 005-create-set-entry
+      author: codex
+      changes:
+        - createTable:
+            tableName: set_entry
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_set_entry
+                    nullable: false
+              - column:
+                  name: workout_session_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: exercise_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: set_order
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reps
+                  type: int
+              - column:
+                  name: weight
+                  type: numeric(7,2)
+              - column:
+                  name: duration_seconds
+                  type: int
+              - column:
+                  name: distance_meters
+                  type: numeric(10,2)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: set_entry
+            baseColumnNames: workout_session_id
+            referencedTableName: workout_session
+            referencedColumnNames: id
+            constraintName: fk_set_entry_session
+        - addForeignKeyConstraint:
+            baseTableName: set_entry
+            baseColumnNames: exercise_id
+            referencedTableName: exercise
+            referencedColumnNames: id
+            constraintName: fk_set_entry_exercise
+        - addUniqueConstraint:
+            tableName: set_entry
+            columnNames: workout_session_id, exercise_id, set_order
+            constraintName: uk_set_entry_session_exercise_order
+        - createIndex:
+            tableName: set_entry
+            indexName: idx_set_entry_session_id
+            columns:
+              - column:
+                  name: workout_session_id
+        - createIndex:
+            tableName: set_entry
+            indexName: idx_set_entry_exercise_id
+            columns:
+              - column:
+                  name: exercise_id
