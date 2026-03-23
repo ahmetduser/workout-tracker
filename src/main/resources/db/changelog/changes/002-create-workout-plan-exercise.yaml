@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-workout-plan-exercise
+      author: codex
+      changes:
+        - createTable:
+            tableName: workout_plan_exercise
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_workout_plan_exercise
+                    nullable: false
+              - column:
+                  name: workout_plan_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: exercise_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: exercise_order
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: workout_plan_exercise
+            baseColumnNames: workout_plan_id
+            referencedTableName: workout_plan
+            referencedColumnNames: id
+            constraintName: fk_workout_plan_exercise_plan
+        - addForeignKeyConstraint:
+            baseTableName: workout_plan_exercise
+            baseColumnNames: exercise_id
+            referencedTableName: exercise
+            referencedColumnNames: id
+            constraintName: fk_workout_plan_exercise_exercise
+        - addUniqueConstraint:
+            tableName: workout_plan_exercise
+            columnNames: workout_plan_id, exercise_id
+            constraintName: uk_workout_plan_exercise_plan_exercise
+        - addUniqueConstraint:
+            tableName: workout_plan_exercise
+            columnNames: workout_plan_id, exercise_order
+            constraintName: uk_workout_plan_exercise_plan_order
+        - createIndex:
+            tableName: workout_plan_exercise
+            indexName: idx_workout_plan_exercise_plan_id
+            columns:
+              - column:
+                  name: workout_plan_id
+        - createIndex:
+            tableName: workout_plan_exercise
+            indexName: idx_workout_plan_exercise_exercise_id
+            columns:
+              - column:
+                  name: exercise_id
