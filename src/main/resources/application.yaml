@@ -7,3 +7,8 @@ spring:
     open-in-view: false
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: never
