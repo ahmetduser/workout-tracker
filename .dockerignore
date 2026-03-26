@@ -1,0 +1,7 @@
+.git
+.idea
+target
+data
+postgres-data
+.DS_Store
+README.md
