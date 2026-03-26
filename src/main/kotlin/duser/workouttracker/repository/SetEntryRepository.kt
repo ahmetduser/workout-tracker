@@ -6,4 +6,5 @@ import java.util.UUID
 
 interface SetEntryRepository : JpaRepository<SetEntry, UUID> {
     fun findAllByWorkoutSessionIdOrderBySetOrderAsc(workoutSessionId: UUID): List<SetEntry>
+    fun findAllByWorkoutSessionIdIn(workoutSessionIds: Collection<UUID>): List<SetEntry>
 }

@@ -18,6 +18,10 @@ app:
     username: test-admin
     password: test-password
     role: WRITER
+  jobs:
+    weekly-summary:
+      cron: 0 0 2 * * MON
+      zone: UTC
 logging:
   level:
     root: INFO

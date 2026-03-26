@@ -22,6 +22,10 @@ app:
     username: workout-admin
     password: change-me
     role: WRITER
+  jobs:
+    weekly-summary:
+      cron: ${APP_JOBS_WEEKLY_SUMMARY_CRON:0 0 2 * * MON}
+      zone: ${APP_JOBS_WEEKLY_SUMMARY_ZONE:UTC}
 logging:
   level:
     root: INFO
