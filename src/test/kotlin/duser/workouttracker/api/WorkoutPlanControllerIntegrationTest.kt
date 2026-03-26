@@ -8,6 +8,7 @@ import duser.workouttracker.domain.User
 import duser.workouttracker.repository.ExerciseRepository
 import duser.workouttracker.repository.SetEntryRepository
 import duser.workouttracker.repository.UserRepository
+import duser.workouttracker.repository.WeeklyWorkoutSummaryRepository
 import duser.workouttracker.repository.WorkoutPlanExerciseRepository
 import duser.workouttracker.repository.WorkoutPlanRepository
 import duser.workouttracker.repository.WorkoutSessionRepository
@@ -35,6 +36,7 @@ class WorkoutPlanControllerIntegrationTest(
     @Autowired private val workoutPlanExerciseRepository: WorkoutPlanExerciseRepository,
     @Autowired private val workoutSessionRepository: WorkoutSessionRepository,
     @Autowired private val setEntryRepository: SetEntryRepository,
+    @Autowired private val weeklyWorkoutSummaryRepository: WeeklyWorkoutSummaryRepository,
 ) {
 
     companion object {
@@ -46,6 +48,7 @@ class WorkoutPlanControllerIntegrationTest(
 
     @BeforeEach
     fun setUp() {
+        weeklyWorkoutSummaryRepository.deleteAll()
         setEntryRepository.deleteAll()
         workoutSessionRepository.deleteAll()
         workoutPlanExerciseRepository.deleteAll()
