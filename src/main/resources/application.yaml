@@ -12,3 +12,8 @@ spring:
       enabled: false
     jdbc:
       initialize-schema: never
+app:
+  security:
+    username: workout-admin
+    password: change-me
+    role: WRITER

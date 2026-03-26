@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.math.BigDecimal
+import java.util.Base64
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -36,6 +38,11 @@ class WorkoutSessionControllerIntegrationTest(
     @Autowired private val workoutSessionRepository: WorkoutSessionRepository,
     @Autowired private val setEntryRepository: SetEntryRepository,
 ) {
+
+    companion object {
+        private const val TEST_USERNAME = "test-admin"
+        private const val TEST_PASSWORD = "test-password"
+    }
 
     private val objectMapper = ObjectMapper().findAndRegisterModules()
 
@@ -62,6 +69,7 @@ class WorkoutSessionControllerIntegrationTest(
 
         mockMvc.perform(
             post(ApiPaths.WorkoutSessions.ROOT)
+                .header(HttpHeaders.AUTHORIZATION, basicAuthHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     objectMapper.writeValueAsBytes(
@@ -93,6 +101,7 @@ class WorkoutSessionControllerIntegrationTest(
 
         mockMvc.perform(
             post("${ApiPaths.WorkoutSessions.ROOT}/${session.id}/set-entries")
+                .header(HttpHeaders.AUTHORIZATION, basicAuthHeader())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     objectMapper.writeValueAsBytes(
@@ -154,5 +163,11 @@ class WorkoutSessionControllerIntegrationTest(
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id").value(session.id.toString()))
             .andExpect(jsonPath("$[0].userId").value(user.id.toString()))
+    }
+
+    private fun basicAuthHeader(): String {
+        val credentials = "$TEST_USERNAME:$TEST_PASSWORD"
+        val encoded = Base64.getEncoder().encodeToString(credentials.toByteArray())
+        return "Basic $encoded"
     }
 }

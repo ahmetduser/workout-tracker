@@ -13,3 +13,8 @@ spring:
       enabled: false
     jdbc:
       initialize-schema: never
+app:
+  security:
+    username: test-admin
+    password: test-password
+    role: WRITER
