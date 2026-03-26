@@ -8,6 +8,8 @@ import duser.workouttracker.repository.ExerciseRepository
 import duser.workouttracker.repository.SetEntryRepository
 import duser.workouttracker.repository.UserRepository
 import duser.workouttracker.repository.WeeklyWorkoutSummaryRepository
+import duser.workouttracker.repository.WorkoutPlanExerciseRepository
+import duser.workouttracker.repository.WorkoutPlanRepository
 import duser.workouttracker.repository.WorkoutSessionRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -29,6 +31,8 @@ class WeeklyWorkoutSummaryServiceIntegrationTest(
     @Autowired private val weeklyWorkoutSummaryRepository: WeeklyWorkoutSummaryRepository,
     @Autowired private val setEntryRepository: SetEntryRepository,
     @Autowired private val workoutSessionRepository: WorkoutSessionRepository,
+    @Autowired private val workoutPlanExerciseRepository: WorkoutPlanExerciseRepository,
+    @Autowired private val workoutPlanRepository: WorkoutPlanRepository,
     @Autowired private val exerciseRepository: ExerciseRepository,
     @Autowired private val userRepository: UserRepository,
 ) {
@@ -38,6 +42,8 @@ class WeeklyWorkoutSummaryServiceIntegrationTest(
         weeklyWorkoutSummaryRepository.deleteAll()
         setEntryRepository.deleteAll()
         workoutSessionRepository.deleteAll()
+        workoutPlanExerciseRepository.deleteAll()
+        workoutPlanRepository.deleteAll()
         exerciseRepository.deleteAll()
         userRepository.deleteAll()
     }
