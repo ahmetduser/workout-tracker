@@ -22,3 +22,8 @@ app:
     username: workout-admin
     password: change-me
     role: WRITER
+management:
+  otlp:
+    metrics:
+      export:
+        enabled: ${MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED:false}
