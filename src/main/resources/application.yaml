@@ -23,6 +23,18 @@ app:
     password: change-me
     role: WRITER
 management:
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
   otlp:
     metrics:
       export:
