@@ -2,10 +2,10 @@ spring:
   application:
     name: workout-tracker
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/workout_tracker}
+    url: ${SPRING_DATASOURCE_URL}
     driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.postgresql.Driver}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -19,9 +19,9 @@ spring:
       initialize-schema: never
 app:
   security:
-    username: workout-admin
-    password: change-me
-    role: WRITER
+    username: ${APP_SECURITY_USERNAME}
+    password: ${APP_SECURITY_PASSWORD}
+    role: ${APP_SECURITY_ROLE:WRITER}
   jobs:
     weekly-summary:
       cron: ${APP_JOBS_WEEKLY_SUMMARY_CRON:0 0 2 * * MON}

@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/workout_tracker
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+
+app:
+  security:
+    username: workout-admin
+    password: change-me
+    role: WRITER
