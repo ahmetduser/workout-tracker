@@ -12,6 +12,7 @@ import duser.workouttracker.repository.ExerciseRepository
 import duser.workouttracker.repository.UserRepository
 import duser.workouttracker.repository.WorkoutPlanExerciseRepository
 import duser.workouttracker.repository.WorkoutPlanRepository
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
@@ -37,6 +38,8 @@ class WorkoutPlanService(
             ),
         )
 
+        logger.info("Created workout plan id={} userId={} name={}", workoutPlan.id, user.id, workoutPlan.name)
+
         return workoutPlan.toResponse(emptyList())
     }
 
@@ -61,6 +64,13 @@ class WorkoutPlanService(
                 exercise = exercise,
                 exerciseOrder = exerciseOrder,
             ),
+        )
+
+        logger.info(
+            "Added exercise to workout plan planId={} exerciseId={} exerciseOrder={}",
+            planId,
+            exercise.id,
+            exerciseOrder,
         )
 
         return getWorkoutPlan(planId)
@@ -95,5 +105,9 @@ class WorkoutPlanService(
             exerciseName = requireNotNull(exercise?.name),
             exerciseOrder = exerciseOrder,
         )
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(WorkoutPlanService::class.java)
     }
 }

@@ -18,6 +18,9 @@ app:
     username: test-admin
     password: test-password
     role: WRITER
+logging:
+  level:
+    root: INFO
 management:
   prometheus:
     metrics:

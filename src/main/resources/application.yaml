@@ -22,6 +22,10 @@ app:
     username: workout-admin
     password: change-me
     role: WRITER
+logging:
+  level:
+    root: INFO
+    duser.workouttracker: INFO
 management:
   prometheus:
     metrics:

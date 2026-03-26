@@ -12,6 +12,7 @@ import duser.workouttracker.repository.SetEntryRepository
 import duser.workouttracker.repository.UserRepository
 import duser.workouttracker.repository.WorkoutPlanRepository
 import duser.workouttracker.repository.WorkoutSessionRepository
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -44,6 +45,13 @@ class WorkoutSessionService(
             ),
         )
 
+        logger.info(
+            "Created workout session id={} userId={} workoutPlanId={}",
+            workoutSession.id,
+            user.id,
+            workoutPlan?.id,
+        )
+
         return workoutSession.toResponse(emptyList())
     }
 
@@ -66,16 +74,28 @@ class WorkoutSessionService(
             ),
         )
 
+        logger.info(
+            "Logged set entry sessionId={} exerciseId={} setOrder={} reps={} weight={}",
+            sessionId,
+            exercise.id,
+            request.setOrder,
+            request.reps,
+            request.weight,
+        )
+
         return getWorkoutSession(sessionId)
     }
 
     @Transactional(readOnly = true)
     fun getWorkoutHistory(userId: UUID): List<WorkoutSessionResponse> {
-        return workoutSessionRepository.findAllByUserIdOrderByStartedAtDesc(userId)
+        val sessions = workoutSessionRepository.findAllByUserIdOrderByStartedAtDesc(userId)
             .map { session ->
                 val sets = setEntryRepository.findAllByWorkoutSessionIdOrderBySetOrderAsc(requireNotNull(session.id))
                 session.toResponse(sets)
             }
+
+        logger.debug("Fetched workout history userId={} sessionCount={}", userId, sessions.size)
+        return sessions
     }
 
     @Transactional(readOnly = true)
@@ -114,5 +134,9 @@ class WorkoutSessionService(
             createdAt = requireNotNull(createdAt),
             updatedAt = requireNotNull(updatedAt),
         )
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(WorkoutSessionService::class.java)
     }
 }

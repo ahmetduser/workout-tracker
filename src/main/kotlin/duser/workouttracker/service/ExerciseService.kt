@@ -5,6 +5,7 @@ import duser.workouttracker.api.dto.ExerciseResponse
 import duser.workouttracker.domain.Exercise
 import duser.workouttracker.exception.ConflictException
 import duser.workouttracker.repository.ExerciseRepository
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -27,14 +28,19 @@ class ExerciseService(
             ),
         )
 
+        logger.info("Created exercise id={} name={}", exercise.id, exercise.name)
+
         return exercise.toResponse()
     }
 
     @Transactional(readOnly = true)
     fun listExercises(): List<ExerciseResponse> {
-        return exerciseRepository.findAll()
+        val exercises = exerciseRepository.findAll()
             .sortedBy { it.name.lowercase() }
             .map { it.toResponse() }
+
+        logger.debug("Listed exercises count={}", exercises.size)
+        return exercises
     }
 
     private fun Exercise.toResponse(): ExerciseResponse {
@@ -45,5 +51,9 @@ class ExerciseService(
             createdAt = requireNotNull(createdAt),
             updatedAt = requireNotNull(updatedAt),
         )
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(ExerciseService::class.java)
     }
 }
