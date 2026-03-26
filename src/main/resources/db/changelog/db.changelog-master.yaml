@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changes/001-initial-workout-schema.yaml
   - include:
       file: db/changelog/changes/002-create-workout-plan-exercise.yaml
+  - include:
+      file: db/changelog/changes/003-create-weekly-workout-summary.yaml
