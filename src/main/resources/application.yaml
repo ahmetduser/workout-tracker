@@ -17,15 +17,29 @@ spring:
       enabled: false
     jdbc:
       initialize-schema: never
-app:
   security:
-    username: ${APP_SECURITY_USERNAME}
-    password: ${APP_SECURITY_PASSWORD}
-    role: ${APP_SECURITY_ROLE:WRITER}
+    oauth2:
+      client:
+        provider:
+          okta:
+            issuer-uri: ${app.oauth2.issuer}
+        registration:
+          okta:
+            client-id: ${app.oauth2.client-id}
+            client-secret: ${app.oauth2.client-secret}
+            scope:
+              - openid
+              - profile
+              - email
+app:
   jobs:
     weekly-summary:
       cron: ${APP_JOBS_WEEKLY_SUMMARY_CRON:0 0 2 * * MON}
       zone: ${APP_JOBS_WEEKLY_SUMMARY_ZONE:UTC}
+  oauth2:
+    issuer: ${OAUTH2_DOMAIN}
+    client-id: ${OAUTH2_CLIENT_ID}
+    client-secret: ${OAUTH2_CLIENT_SECRET}
 logging:
   level:
     root: INFO
