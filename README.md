@@ -85,8 +85,6 @@ Local defaults:
 - database: `jdbc:postgresql://localhost:5432/workout_tracker`
 - username: `postgres`
 - password: `postgres`
-- basic auth username: `workout-admin`
-- basic auth password: `change-me`
 
 ### Option 2: Run The Full Local Stack With Docker Compose
 
@@ -107,22 +105,36 @@ Available local endpoints:
 
 The compose file is local-development-only and should not be treated as a production deployment model.
 
-### Authentication
+### Option 3: Run Dependencies In Docker And The App From IntelliJ
 
-Current security is intentionally simple:
-
-- `GET /api/**` is public
-- `GET /actuator/**` is public
-- non-GET requests require HTTP Basic auth
-
-Example:
+This starts PostgreSQL, Prometheus, and Grafana in Docker while you run the Spring Boot app directly from IntelliJ.
 
 ```bash
-curl -u workout-admin:change-me \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Bench Press"}' \
-  http://localhost:8080/api/exercises
+docker compose up -d postgres prometheus grafana
 ```
+
+Then run the app from IntelliJ with:
+
+- `SPRING_PROFILES_ACTIVE=local`
+- `OAUTH2_DOMAIN`
+- `OAUTH2_CLIENT_ID`
+- `OAUTH2_CLIENT_SECRET`
+
+Notes:
+
+- PostgreSQL is exposed on `localhost:5432`, which matches [application-local.yaml](/Users/ahmetduser/IdeaProjects/workout-tracker/src/main/resources/application-local.yaml)
+- Prometheus scrapes `http://host.docker.internal:8080/actuator/prometheus`, so your IntelliJ-run app must listen on port `8080`
+
+### Authentication
+
+The app uses OAuth2 login for browser access.
+
+Current authorization rules:
+
+- `GET /` is public
+- `GET /api/**` is public
+- `GET /actuator/**` is public
+- other routes require an authenticated OAuth2 session
 
 ## How To Run Tests
 
