@@ -17,14 +17,14 @@ spring:
     oauth2:
       client:
         provider:
-          okta:
+          auth0:
             authorization-uri: https://example.test/oauth2/authorize
             token-uri: https://example.test/oauth2/token
             jwk-set-uri: https://example.test/oauth2/keys
             user-info-uri: https://example.test/userinfo
             user-name-attribute: sub
         registration:
-          okta:
+          auth0:
             client-id: test-client-id
             client-secret: test-client-secret
             authorization-grant-type: authorization_code

@@ -21,10 +21,10 @@ spring:
     oauth2:
       client:
         provider:
-          okta:
+          auth0:
             issuer-uri: ${app.oauth2.issuer}
         registration:
-          okta:
+          auth0:
             client-id: ${app.oauth2.client-id}
             client-secret: ${app.oauth2.client-secret}
             scope:

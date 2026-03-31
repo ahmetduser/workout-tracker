@@ -3,7 +3,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <div sec:authorize="!isAuthenticated()">
-    <a th:href="@{/oauth2/authorization/okta}">Log In</a>
+    <a th:href="@{/oauth2/authorization/auth0}">Log In</a>
 </div>
 <div sec:authorize="isAuthenticated()">
     <p>You are logged in!</p>
