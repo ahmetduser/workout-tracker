@@ -17,14 +17,13 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
-import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.Base64
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,12 +37,6 @@ class WorkoutPlanControllerIntegrationTest(
     @Autowired private val setEntryRepository: SetEntryRepository,
     @Autowired private val weeklyWorkoutSummaryRepository: WeeklyWorkoutSummaryRepository,
 ) {
-
-    companion object {
-        private const val TEST_USERNAME = "test-admin"
-        private const val TEST_PASSWORD = "test-password"
-    }
-
     private val objectMapper = ObjectMapper().findAndRegisterModules()
 
     @BeforeEach
@@ -63,7 +56,7 @@ class WorkoutPlanControllerIntegrationTest(
 
         mockMvc.perform(
             post(ApiPaths.WorkoutPlans.ROOT)
-                .header(HttpHeaders.AUTHORIZATION, basicAuthHeader())
+                .with(oauth2Login())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     objectMapper.writeValueAsBytes(
@@ -95,7 +88,7 @@ class WorkoutPlanControllerIntegrationTest(
 
         mockMvc.perform(
             post("${ApiPaths.WorkoutPlans.ROOT}/${plan.id}/exercises")
-                .header(HttpHeaders.AUTHORIZATION, basicAuthHeader())
+                .with(oauth2Login())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     objectMapper.writeValueAsBytes(
@@ -137,11 +130,5 @@ class WorkoutPlanControllerIntegrationTest(
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.name").value("Strength"))
             .andExpect(jsonPath("$.exercises[0].exerciseName").value("Deadlift"))
-    }
-
-    private fun basicAuthHeader(): String {
-        val credentials = "$TEST_USERNAME:$TEST_PASSWORD"
-        val encoded = Base64.getEncoder().encodeToString(credentials.toByteArray())
-        return "Basic $encoded"
     }
 }

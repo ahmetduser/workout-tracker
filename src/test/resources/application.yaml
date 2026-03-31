@@ -13,11 +13,27 @@ spring:
       enabled: false
     jdbc:
       initialize-schema: never
-app:
   security:
-    username: test-admin
-    password: test-password
-    role: WRITER
+    oauth2:
+      client:
+        provider:
+          okta:
+            authorization-uri: https://example.test/oauth2/authorize
+            token-uri: https://example.test/oauth2/token
+            jwk-set-uri: https://example.test/oauth2/keys
+            user-info-uri: https://example.test/userinfo
+            user-name-attribute: sub
+        registration:
+          okta:
+            client-id: test-client-id
+            client-secret: test-client-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - openid
+              - profile
+              - email
+app:
   jobs:
     weekly-summary:
       cron: 0 0 2 * * MON
